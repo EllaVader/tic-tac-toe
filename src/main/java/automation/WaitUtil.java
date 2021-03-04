@@ -3,7 +3,6 @@ package automation;
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
@@ -28,31 +27,6 @@ public class WaitUtil {
 	}
 
 	/**
-	 * Wait until element is visible
-	 *
-	 * @param driver           - {@link WebDriver} the search context
-	 * @param locator          - {@link By} the locator
-	 * @param timeoutInSeconds - optional timeout in seconds value, if not set use
-	 *                         default value
-	 *
-	 * @return - {@link WebElement} - found element
-	 */
-	public static WebElement waitForElementVisible(final WebDriver driver, final By locator,
-			final long... timeoutInSeconds) {
-
-		nullifyImplicitWait(driver);
-
-		// set timeout value
-		long timeout = (timeoutInSeconds.length > 0) ? timeoutInSeconds[0] : DEFAULT_WAIT_TIMEOUT;
-
-		wait = initializeFluentWait(driver, timeout);
-		WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
-
-		setDefaultImplicitWait(driver);
-		return element;
-	}
-
-	/**
 	 * Wait for element visible
 	 * 
 	 * @param driver
@@ -73,41 +47,6 @@ public class WaitUtil {
 
 		setDefaultImplicitWait(driver);
 		return foundElement;
-	}
-
-	/**
-	 * zeros out implicit wait time
-	 *
-	 * @param driver - {@link WebDriver} the driver to act on
-	 */
-	public static void nullifyImplicitWait(final WebDriver driver) {
-		driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
-	}
-
-	/**
-	 * Set driver implicitlyWait() time.
-	 *
-	 * @param driver             - {@link WebDriver} the driver to act on
-	 * @param waitTime_InSeconds - time to wait
-	 */
-	public static void setImplicitWait(final WebDriver driver, final long waitTime_InSeconds) {
-		driver.manage().timeouts().implicitlyWait(waitTime_InSeconds, TimeUnit.SECONDS);
-	}
-
-	public static void waitForTextToBePresent(final WebDriver driver, WebElement element, String text,
-			final long... timeoutInSeconds) {
-
-		nullifyImplicitWait(driver);
-
-		// set timeout value
-		long timeout = (timeoutInSeconds.length > 0) ? timeoutInSeconds[0] : DEFAULT_WAIT_TIMEOUT;
-		wait = initializeFluentWait(driver, timeout);
-		wait.until(wd -> {
-			String elementText = element.getText();
-			return elementText.contains(text);
-		});
-
-		setDefaultImplicitWait(driver);
 	}
 
 	/**
@@ -140,6 +79,25 @@ public class WaitUtil {
 	 */
 	public static void setDefaultImplicitWait(final WebDriver driver) {
 		driver.manage().timeouts().implicitlyWait(DEFAULT_WAIT_TIMEOUT, TimeUnit.SECONDS);
+	}
+
+	/**
+	 * zeros out implicit wait time
+	 *
+	 * @param driver - {@link WebDriver} the driver to act on
+	 */
+	public static void nullifyImplicitWait(final WebDriver driver) {
+		driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+	}
+
+	/**
+	 * Set driver implicitlyWait() time.
+	 *
+	 * @param driver             - {@link WebDriver} the driver to act on
+	 * @param waitTime_InSeconds - time to wait
+	 */
+	public static void setImplicitWait(final WebDriver driver, final long waitTime_InSeconds) {
+		driver.manage().timeouts().implicitlyWait(waitTime_InSeconds, TimeUnit.SECONDS);
 	}
 
 	private static FluentWait<WebDriver> initializeFluentWait(final WebDriver driver, long timeout) {
